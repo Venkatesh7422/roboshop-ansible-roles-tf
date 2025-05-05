@@ -1,15 +1,22 @@
-- name: Get CentOS version from /etc/os-release
-  shell: "awk -F'=' '/^VERSION_ID=/ { gsub(/\\\"/, \"\", $2); print $2 }' /etc/os-release"
-  register: centos_version
-  changed_when: false
-
-- name: Install matching Remi release RPM
+- name: Install dnf-utils and enable powertools (required for Remi repo)
   ansible.builtin.dnf:
-    name: "https://rpms.remirepo.net/enterprise/remi-release-{{ centos_version.stdout }}.rpm"
+    name:
+      - dnf-utils
+      - epel-release
+    state: present
+
+- name: Enable powertools repository
+  ansible.builtin.command: dnf config-manager --set-enabled powertools
+  args:
+    warn: false
+
+- name: Install Remi release for CentOS Stream 8
+  ansible.builtin.dnf:
+    name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     state: present
     disable_gpg_check: true
 
-- name: Enable Redis module from Remi
+- name: Enable Redis module from Remi repo
   ansible.builtin.command: dnf module enable redis:remi-6.2 -y
   args:
     warn: false
@@ -19,7 +26,7 @@
     name: redis
     state: present
 
-- name: Allow remote connections
+- name: Allow remote connections in Redis config
   ansible.builtin.replace:
     path: /etc/redis/redis.conf
     regexp: '127.0.0.1'
