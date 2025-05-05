@@ -1,4 +1,4 @@
-- name: Install dnf-utils and enable powertools (required for Remi repo)
+- name: Install dnf-utils and epel-release
   ansible.builtin.dnf:
     name:
       - dnf-utils
@@ -10,9 +10,14 @@
   args:
     warn: false
 
-- name: Install Remi release for CentOS Stream 8
+- name: Download Remi release compatible with CentOS Stream 8
+  ansible.builtin.get_url:
+    url: https://rpms.remirepo.net/enterprise/remi-release-8.5.rpm
+    dest: /tmp/remi-release.rpm
+
+- name: Install Remi release RPM
   ansible.builtin.dnf:
-    name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    name: /tmp/remi-release.rpm
     state: present
     disable_gpg_check: true
 
@@ -37,6 +42,7 @@
     name: redis
     state: restarted
     enabled: yes
+
     
 # - name: install remi release
 #   ansible.builtin.dnf: # check pacakge will work not
