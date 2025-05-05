@@ -1,25 +1,58 @@
-- name: install remi release
-  ansible.builtin.dnf: # check pacakge will work not
-    name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+- name: Get CentOS major.minor version (e.g. 8.4)
+  shell: "rpm -q --qf '%{VERSION}' centos-release"
+  register: centos_version
+  changed_when: false
+
+- name: Install matching Remi release RPM (e.g. remi-release-8.4.rpm)
+  ansible.builtin.dnf:
+    name: "https://rpms.remirepo.net/enterprise/remi-release-{{ centos_version.stdout }}.rpm"
     state: present
     disable_gpg_check: true
-  
-- name: enable redis
-  ansible.builtin.command: dnf module enable redis:remi-6.2 -y
 
-- name: install redis
+- name: Enable Redis module from Remi (remi-6.2)
+  ansible.builtin.command: dnf module enable redis:remi-6.2 -y
+  args:
+    warn: false
+
+- name: Install Redis
   ansible.builtin.dnf:
     name: redis
     state: present
 
-- name: allow remote connections
+- name: Allow remote connections
   ansible.builtin.replace:
     path: /etc/redis/redis.conf
     regexp: '127.0.0.1'
     replace: '0.0.0.0'
 
-- name: start and enable redis
+- name: Start and enable Redis service
   ansible.builtin.service:
     name: redis
     state: restarted
     enabled: yes
+    
+# - name: install remi release
+#   ansible.builtin.dnf: # check pacakge will work not
+#     name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+#     state: present
+#     disable_gpg_check: true
+  
+# - name: enable redis
+#   ansible.builtin.command: dnf module enable redis:remi-6.2 -y
+
+# - name: install redis
+#   ansible.builtin.dnf:
+#     name: redis
+#     state: present
+
+# - name: allow remote connections
+#   ansible.builtin.replace:
+#     path: /etc/redis/redis.conf
+#     regexp: '127.0.0.1'
+#     replace: '0.0.0.0'
+
+# - name: start and enable redis
+#   ansible.builtin.service:
+#     name: redis
+#     state: restarted
+#     enabled: yes
