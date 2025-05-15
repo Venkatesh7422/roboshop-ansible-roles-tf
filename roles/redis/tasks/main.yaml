@@ -1,47 +1,47 @@
-- name: Install dnf-utils and epel-release
-  ansible.builtin.dnf:
-    name:
-      - dnf-utils
-      - epel-release
-    state: present
+# - name: Install dnf-utils and epel-release
+#   ansible.builtin.dnf:
+#     name:
+#       - dnf-utils
+#       - epel-release
+#     state: present
 
-- name: Enable powertools repository
-  ansible.builtin.command: dnf config-manager --set-enabled powertools
-  args:
-    warn: false
+# - name: Enable powertools repository
+#   ansible.builtin.command: dnf config-manager --set-enabled powertools
+#   args:
+#     warn: false
 
-- name: Download Remi release compatible with CentOS Stream 8
-  ansible.builtin.get_url:
-    url: https://rpms.remirepo.net/enterprise/remi-release-8.5.rpm
-    dest: /tmp/remi-release.rpm
+# - name: Download Remi release compatible with ec2-user Stream 8
+#   ansible.builtin.get_url:
+#     url: https://rpms.remirepo.net/enterprise/remi-release-8.5.rpm
+#     dest: /tmp/remi-release.rpm
 
-- name: Install Remi release RPM
-  ansible.builtin.dnf:
-    name: /tmp/remi-release.rpm
-    state: present
-    disable_gpg_check: true
+# - name: Install Remi release RPM
+#   ansible.builtin.dnf:
+#     name: /tmp/remi-release.rpm
+#     state: present
+#     disable_gpg_check: true
 
-- name: Enable Redis module from Remi repo
-  ansible.builtin.command: dnf module enable redis:remi-6.2 -y
-  args:
-    warn: false
+# - name: Enable Redis module from Remi repo
+#   ansible.builtin.command: dnf module enable redis:remi-6.2 -y
+#   args:
+#     warn: false
 
-- name: Install Redis
-  ansible.builtin.dnf:
-    name: redis
-    state: present
+# - name: Install Redis
+#   ansible.builtin.dnf:
+#     name: redis
+#     state: present
 
-- name: Allow remote connections in Redis config
-  ansible.builtin.replace:
-    path: /etc/redis/redis.conf
-    regexp: '127.0.0.1'
-    replace: '0.0.0.0'
+# - name: Allow remote connections in Redis config
+#   ansible.builtin.replace:
+#     path: /etc/redis/redis.conf
+#     regexp: '127.0.0.1'
+#     replace: '0.0.0.0'
 
-- name: Start and enable Redis service
-  ansible.builtin.service:
-    name: redis
-    state: restarted
-    enabled: yes
+# - name: Start and enable Redis service
+#   ansible.builtin.service:
+#     name: redis
+#     state: restarted
+#     enabled: yes
 
     
 # - name: install remi release
@@ -53,19 +53,21 @@
 # - name: enable redis
 #   ansible.builtin.command: dnf module enable redis:remi-6.2 -y
 
-# - name: install redis
-#   ansible.builtin.dnf:
-#     name: redis
-#     state: present
+# daws81s-batch
 
-# - name: allow remote connections
-#   ansible.builtin.replace:
-#     path: /etc/redis/redis.conf
-#     regexp: '127.0.0.1'
-#     replace: '0.0.0.0'
+- name: install redis
+  ansible.builtin.dnf:
+    name: redis
+    state: present
 
-# - name: start and enable redis
-#   ansible.builtin.service:
-#     name: redis
-#     state: restarted
-#     enabled: yes
+- name: allow remote connections
+  ansible.builtin.replace:
+    path: /etc/redis/redis.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+
+- name: start and enable redis
+  ansible.builtin.service:
+    name: redis
+    state: restarted
+    enabled: yes
