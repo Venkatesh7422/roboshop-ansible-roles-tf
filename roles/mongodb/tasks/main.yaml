@@ -73,35 +73,77 @@
 #     state: restarted
 
 
-- name: Copy MongoDB repo file to the system
-  ansible.builtin.copy:
-    src: mongodb.repo
-    dest: /etc/yum.repos.d/mongodb.repo
+# - name: Copy MongoDB repo file to the system
+#   ansible.builtin.copy:
+#     src: mongodb.repo
+#     dest: /etc/yum.repos.d/mongodb.repo
 
-- name: Clean DNF cache
-  ansible.builtin.command: dnf clean all
+# - name: Clean DNF cache
+#   ansible.builtin.command: dnf clean all
 
-- name: Rebuild DNF cache
-  ansible.builtin.command: dnf makecache
+# - name: Rebuild DNF cache
+#   ansible.builtin.command: dnf makecache
 
-- name: Install MongoDB (full package includes shell)
-  ansible.builtin.package:
-    name: mongodb-org
-    state: present
+# - name: Install MongoDB (full package includes shell)
+#   ansible.builtin.package:
+#     name: mongodb-org
+#     state: present
 
-- name: Enable and start MongoDB service
-  ansible.builtin.service:
-    name: mongod
-    state: started
-    enabled: yes
+# - name: Enable and start MongoDB service
+#   ansible.builtin.service:
+#     name: mongod
+#     state: started
+#     enabled: yes
 
-- name: Allow remote MongoDB connections
-  ansible.builtin.replace:
-    path: /etc/mongod.conf
-    regexp: '127\.0\.0\.1'
-    replace: '0.0.0.0'
+# - name: Allow remote MongoDB connections
+#   ansible.builtin.replace:
+#     path: /etc/mongod.conf
+#     regexp: '127\.0\.0\.1'
+#     replace: '0.0.0.0'
 
-- name: Restart MongoDB after config change
-  ansible.builtin.service:
-    name: mongod
-    state: restarted
+# - name: Restart MongoDB after config change
+#   ansible.builtin.service:
+#     name: mongod
+#     state: restarted
+
+#     888888888888888888
+
+  - name: Copy MongoDB repo file
+    ansible.builtin.copy:
+      src: mongodb.repo
+      dest: /etc/yum.repos.d/mongodb.repo
+      force: yes
+
+  - name: Remove old mongodb repo files
+    ansible.builtin.file:
+       path: /etc/yum.repos.d/mongodb-org-4.2.repo
+       state: absent
+
+  - name: Clean DNF metadata
+    ansible.builtin.command: dnf clean all
+
+  - name: Rebuild DNF cache
+    ansible.builtin.command: dnf makecache
+
+  - name: Install MongoDB (includes shell)
+    ansible.builtin.package:
+      name: mongodb-org
+      state: present
+
+  - name: Enable and start MongoDB
+    ansible.builtin.service:
+      name: mongod
+      enabled: yes
+      state: started
+
+  - name: Allow remote connections in mongod.conf
+    ansible.builtin.replace:
+      path: /etc/mongod.conf
+      regexp: '^ *bindIp:.*'
+      replace: '  bindIp: 0.0.0.0'
+
+  - name: Restart MongoDB after config change
+    ansible.builtin.service:
+      name: mongod
+      state: restarted
+
