@@ -3,9 +3,14 @@
     src: mongodb.repo
     dest: /etc/yum.repos.d/mongodb.repo
 
-- name: Install mongodb client
+# - name: Install mongodb client
+#   ansible.builtin.package:
+#     name: mongodb-org-shell
+#     state: present
+
+- name: Install MongoDB client (mongosh)
   ansible.builtin.package:
-    name: mongodb-org-shell
+    name: mongodb-mongosh
     state: present
 
 - name: "get the catalogue entries count"

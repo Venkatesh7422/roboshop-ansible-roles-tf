@@ -1,149 +1,31 @@
-# - name: Copy mongodb repo
-#   ansible.builtin.copy:
-#     src: mongodb.repo
-#     dest: /etc/yum.repos.d/mongodb.repo
+- name: Copy mongodb repo
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
   
-# - name: Install mongodb
-#   ansible.builtin.package:
-#     name: mongodb-org
-#     state: present
+- name: Install mongodb
+  ansible.builtin.package:
+    name: mongodb-org
+    state: present
 
-# - name: start and enable mongodb
-#   ansible.builtin.service:
-#     name: mongod
-#     state: started
-#     enabled: yes
+- name: start and enable mongodb
+  ansible.builtin.service:
+    name: mongod
+    state: started
+    enabled: yes
 
-# - name: allow remote conncections
-#   ansible.builtin.replace:
-#     path: /etc/mongod.conf
-#     regexp: '127.0.0.1'
-#     replace: '0.0.0.0'
+- name: allow remote conncections
+  ansible.builtin.replace:
+    path: /etc/mongod.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
 
-# - name: start and enable mongodb
-#   ansible.builtin.service:
-#     name: mongod
-#     state: restarted
-
-# - name: Set up MongoDB 7.0 repo for RHEL 9
-#   ansible.builtin.copy:
-#     dest: /etc/yum.repos.d/mongodb-org-7.0.repo
-#     content: |
-#       [mongodb-org-7.0]
-#       name=MongoDB Repository
-#       baseurl=https://repo.mongodb.org/yum/redhat/9/mongodb-org/7.0/x86_64/
-#       gpgcheck=1
-#       enabled=1
-#       gpgkey=https://pgp.mongodb.com/server-7.0.asc
-
-# - name: Install required dependencies
-#   ansible.builtin.package:
-#     name:
-#       - curl
-#       - ca-certificates
-#       - gnupg
-#     state: present
-
-# - name: Clean DNF cache
-#   ansible.builtin.command: dnf clean all
-
-# - name: Rebuild DNF cache
-#   ansible.builtin.command: dnf makecache
-
-# - name: Install MongoDB
-#   ansible.builtin.package:
-#     name: mongodb-org
-#     state: present
-
-# - name: Enable and start MongoDB service
-#   ansible.builtin.service:
-#     name: mongod
-#     state: started
-#     enabled: yes
-
-# - name: Allow remote MongoDB connections
-#   ansible.builtin.replace:
-#     path: /etc/mongod.conf
-#     regexp: '127\.0\.0\.1'
-#     replace: '0.0.0.0'
-
-# - name: Restart MongoDB after config change
-#   ansible.builtin.service:
-#     name: mongod
-#     state: restarted
+- name: start and enable mongodb
+  ansible.builtin.service:
+    name: mongod
+    state: restarted
 
 
-# - name: Copy MongoDB repo file to the system
-#   ansible.builtin.copy:
-#     src: mongodb.repo
-#     dest: /etc/yum.repos.d/mongodb.repo
 
-# - name: Clean DNF cache
-#   ansible.builtin.command: dnf clean all
 
-# - name: Rebuild DNF cache
-#   ansible.builtin.command: dnf makecache
-
-# - name: Install MongoDB (full package includes shell)
-#   ansible.builtin.package:
-#     name: mongodb-org
-#     state: present
-
-# - name: Enable and start MongoDB service
-#   ansible.builtin.service:
-#     name: mongod
-#     state: started
-#     enabled: yes
-
-# - name: Allow remote MongoDB connections
-#   ansible.builtin.replace:
-#     path: /etc/mongod.conf
-#     regexp: '127\.0\.0\.1'
-#     replace: '0.0.0.0'
-
-# - name: Restart MongoDB after config change
-#   ansible.builtin.service:
-#     name: mongod
-#     state: restarted
-
-#     888888888888888888
-
-  - name: Copy MongoDB repo file
-    ansible.builtin.copy:
-      src: mongodb.repo
-      dest: /etc/yum.repos.d/mongodb.repo
-      force: yes
-
-  - name: Remove old mongodb repo files
-    ansible.builtin.file:
-       path: /etc/yum.repos.d/mongodb-org-4.2.repo
-       state: absent
-
-  - name: Clean DNF metadata
-    ansible.builtin.command: dnf clean all
-
-  - name: Rebuild DNF cache
-    ansible.builtin.command: dnf makecache
-
-  - name: Install MongoDB (includes shell)
-    ansible.builtin.package:
-      name: mongodb-org
-      state: present
-
-  - name: Enable and start MongoDB
-    ansible.builtin.service:
-      name: mongod
-      enabled: yes
-      state: started
-
-  - name: Allow remote connections in mongod.conf
-    ansible.builtin.replace:
-      path: /etc/mongod.conf
-      regexp: '^ *bindIp:.*'
-      replace: '  bindIp: 0.0.0.0'
-
-  - name: Restart MongoDB after config change
-    ansible.builtin.service:
-      name: mongod
-      state: restarted
 
