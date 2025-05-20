@@ -8,5 +8,5 @@ CART_HOST: cart.app-dev.venky.shop
 SHIPPING_HOST: shipping.app-dev.venky.shop 
 PAYMENT_HOST: payment.app-dev.venky.shop 
 DISPATCH_HOST: dispatch.app-dev.venky.shop
-NEXUS_URL: http://172.31.84.49:8081/repository
+NEXUS_URL: http://13.219.80.75:8081/repository
 group_id: "com/roboshop"
