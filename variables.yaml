@@ -8,4 +8,3 @@ CART_HOST: cart.venky.shop
 SHIPPING_HOST: shipping.venky.shop
 PAYMENT_HOST: payment.venky.shop
 DISPATCH_HOST: dispatch.venky.shop
-WEB_HOST: web.venky.shop
